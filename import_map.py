@@ -6,7 +6,11 @@ from matplotlib import pyplot
 figure = pyplot.figure()
 axes = figure.add_subplot(projection='3d')
 
-M = mesh.Mesh.from_file('map.stl')
+# Download the STL file and change the location
+aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
+# jan = 
+
+M = mesh.Mesh.from_file(aitor)
 X = []
 Y = []
 Z = []
