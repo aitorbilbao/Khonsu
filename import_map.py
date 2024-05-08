@@ -3,14 +3,7 @@ from stl import mesh
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 
-# Download the STL file and load it into a mesh
-aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
-# jan = 
-
-#Change file path
-M = mesh.Mesh.from_file(aitor)
-
-def import_map_mesh(mesh_path):
+def import_map_mesh(M,new_grid_size):
 
     X = []
     Y = []
@@ -33,9 +26,6 @@ def import_map_mesh(mesh_path):
             X.append(vertex[0])
             Y.append(vertex[1])
             Z.append(vertex[2])
-
-    # Define the new grid size
-    new_grid_size = 50000
 
     # Generate the new grid points
     x_min, x_max = min(X), max(X)
