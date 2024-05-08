@@ -3,19 +3,22 @@ from stl import mesh
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 
+# Create a new plot for 3D grid visualization
 figure = pyplot.figure()
 axes = figure.add_subplot(projection='3d')
 
-# Download the STL file and change the location
+# Download the STL file and load it into a mesh
 aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
 # jan = 
 
+#Change file path
 M = mesh.Mesh.from_file(aitor)
 X = []
 Y = []
 Z = []
 
 '''
+# Plot the 3D mesh
 axes.add_collection3d(mplot3d.art3d.Poly3DCollection(M.vectors))
 
 # Auto scale to the mesh size
@@ -25,7 +28,7 @@ axes.auto_scale_xyz(scale, scale, scale)
 # Show the plot to the screen
 pyplot.show()
 '''
-
+# Extract the coordinates from the mesh
 for vector in M.vectors:
     for vertex in vector:
         X.append(vertex[0])
@@ -33,7 +36,7 @@ for vector in M.vectors:
         Z.append(vertex[2])
 
 # Define the new grid size
-new_grid_size = 10000
+new_grid_size = 1000
 
 # Generate the new grid points
 x_min, x_max = min(X), max(X)
