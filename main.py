@@ -2,6 +2,8 @@ from stl import mesh
 import matplotlib.pyplot as plt
 from import_map import import_map_mesh, plot_grid
 from environment import MoonEnvironment
+import keyboard
+import pygame
 
 # Download the STL file and load it into a mesh
 aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
@@ -20,5 +22,12 @@ X,Y,elevation = import_map_mesh(M,grid_size)
 
 #print(Y)
 #plot_grid(X,Y,elevation)
-#env = MoonEnvironment(X,Y,elevation)
 #print(env.map)
+env = MoonEnvironment(X,Y,elevation)
+
+while True:
+    plt.contourf(X, Y, elevation)
+    plt.colorbar()
+    env.step(index = int(input("Enter a number: ")))
+    plt.scatter(env.state[0], env.state[1], c='red')
+    plt.show()
