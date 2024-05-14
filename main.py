@@ -1,7 +1,7 @@
 from stl import mesh
 import matplotlib.pyplot as plt
 from import_map import import_map_mesh, plot_grid
-from environment import MoonEnvironment
+from env2 import MoonEnvironment
 import keyboard
 import pygame
 
@@ -15,7 +15,9 @@ grid_size = 50000
 
 
 X,Y,elevation = import_map_mesh(M,grid_size)
-
+print (X)
+print (Y)
+print (elevation)
 
 #pygame.init()
 #self.cell_size = 1
@@ -23,12 +25,11 @@ X,Y,elevation = import_map_mesh(M,grid_size)
 #print(Y)
 #plot_grid(X,Y,elevation)
 #print(env.map)
+#plt.contourf(X, Y, elevation)
+#plt.colorbar()
+
 env = MoonEnvironment(X,Y,elevation)
 
 while True:
-    plt.contourf(X, Y, elevation)
-    plt.colorbar()
-    env.step(index = int(input("Enter a number: ")))
-    plt.scatter(env.state[0], env.state[1], c='red')
-    plt.scatter(env.goal_position[0], env.goal_position[1], c='purple')
-    plt.show()
+    env.render()
+# ---------------------------------------------------------
