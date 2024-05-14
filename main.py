@@ -16,10 +16,10 @@ grid_size = 50000
 
 X,Y,elevation = import_map_mesh(M,grid_size)
 
-#plt.contourf(X, Y, elevation)
-#plt.colorbar()
-#plt.show()
 
+#pygame.init()
+#self.cell_size = 1
+#self.screen = pygame.display.set_mode((self.map_size[1]*self.cell_size, self.map_size[2]*self.cell_size))
 #print(Y)
 #plot_grid(X,Y,elevation)
 #print(env.map)
