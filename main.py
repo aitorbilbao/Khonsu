@@ -30,4 +30,5 @@ while True:
     plt.colorbar()
     env.step(index = int(input("Enter a number: ")))
     plt.scatter(env.state[0], env.state[1], c='red')
+    plt.scatter(env.goal_position[0], env.goal_position[1], c='purple')
     plt.show()
