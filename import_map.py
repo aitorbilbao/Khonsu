@@ -34,6 +34,11 @@ def import_map_mesh(M,new_grid_size):
     new_y_grid = numpy.arange(y_min, y_max, new_grid_size)
     new_xx, new_yy = numpy.meshgrid(new_x_grid, new_y_grid)
 
+    #Get average heights
+    new_elevation = average_value(X, Y, Z, new_x_grid, new_y_grid, new_xx, new_yy)
+    return new_xx, new_yy, new_elevation
+
+def average_value(X, Y, Z, new_x_grid, new_y_grid, new_xx, new_yy):
     # Calculate the average height for each new grid region
     new_z_grid = numpy.zeros_like(new_xx)
     for i in range(len(new_x_grid)-1):
@@ -41,7 +46,19 @@ def import_map_mesh(M,new_grid_size):
             region_mask = (X >= new_x_grid[i]) & (X < new_x_grid[i+1]) & (Y >= new_y_grid[j]) & (Y < new_y_grid[j+1])
             if numpy.any(region_mask):
                 new_z_grid[j, i] = numpy.mean(numpy.array(Z)[region_mask])
-    return new_xx, new_yy, new_z_grid
+    for i in range(len(new_x_grid)-1):
+        region_mask = (X >= new_x_grid[i]) & (X < new_x_grid[i+1]) & (Y >= new_y_grid[-1])
+        if numpy.any(region_mask):
+            new_z_grid[-1, i] = numpy.mean(numpy.array(Z)[region_mask])
+    for j in range(len(new_y_grid)-1):
+        region_mask = (X >= new_x_grid[-1]) & (Y >= new_y_grid[j]) & (Y < new_y_grid[j+1])
+        if numpy.any(region_mask):
+            new_z_grid[j, -1] = numpy.mean(numpy.array(Z)[region_mask])
+    region_mask = (X >= new_x_grid[-1]) & (Y >= new_y_grid[-1])
+    if numpy.any(region_mask):
+        new_z_grid[-1, -1] = numpy.mean(numpy.array(Z)[region_mask])
+
+    return new_z_grid
 
 def plot_grid(new_xx, new_yy, new_z_grid):
     # Create a new plot for 3D grid visualization
