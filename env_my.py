@@ -43,7 +43,7 @@ class MoonEnvironment(gym.Env):
         if self.state == self.old_state:
             return np.array(self.state), -100, False, {}  # large negative reward for invalid move
 
-        #Elevation cost (going down is good, going up is bad)
+        #Elevation cost
         elevation_cost = self.cost(self.old_state, self.state)
         
         done = self.state == self.goal1_position
