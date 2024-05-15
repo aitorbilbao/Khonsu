@@ -13,7 +13,7 @@ aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
 
 #Change file path (mesh is 297x297 km)
 M = mesh.Mesh.from_file(aitor)
-grid_size = 10000
+grid_size = 50000
 
 
 X,Y,elevation = import_map_mesh(M,grid_size)
@@ -32,15 +32,4 @@ X,Y,elevation = import_map_mesh(M,grid_size)
 
 # ---------------------------------------------------------
 
-
-# Create an instance of the environment
 env = MoonEnvironment(X, Y, elevation)
-
-# Perform the A* search
-came_from, cost_so_far = a_star_search(env, env.initial_position, env.goal1_position)
-
-# Reconstruct the path
-path = reconstruct_path(came_from, env.initial_position, env.goal1_position)
-
-# Print the path
-print(path)
