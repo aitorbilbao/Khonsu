@@ -2,6 +2,8 @@ from stl import mesh
 import matplotlib.pyplot as plt
 from import_map import import_map_mesh, plot_grid
 from env_my import MoonEnvironment
+from astar import a_star_search, reconstruct_path
+
 import keyboard
 import pygame
 
@@ -31,20 +33,14 @@ X,Y,elevation = import_map_mesh(M,grid_size)
 # ---------------------------------------------------------
 
 
-import numpy as np
-
 # Create an instance of the environment
 env = MoonEnvironment(X, Y, elevation)
 
-# Reset the environment and get the initial state
-state = env.reset()
+# Perform the A* search
+came_from, cost_so_far = a_star_search(env, env.initial_position, env.goal1_position)
 
-# Run an episode
-done = False
-while not done:
-    # Select an action
-    action = np.random.choice(env.action_space.n)  # random policy
-    # Take a step in the environment
-    state, reward, done, info = env.step(action)
-    # Render the environment
-    env.render()
+# Reconstruct the path
+path = reconstruct_path(came_from, env.initial_position, env.goal1_position)
+
+# Print the path
+print(path)
