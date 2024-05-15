@@ -24,6 +24,9 @@ class MoonEnvironment(gym.Env):
         self.action_space = gym.spaces.Discrete(5)
         self.observation_space = gym.spaces.Tuple((gym.spaces.Discrete(len(self.X)), gym.spaces.Discrete(len(self.Y))))
 
+    def cost(self, a, b):
+        return abs(self.elevation[a[0], a[1]] - self.elevation[b[0], b[1]])
+    
     def step(self, action):
         self.old_state = self.state
         if action == 0 and self.state[1] < len(self.Y)-1:  # up
@@ -41,14 +44,23 @@ class MoonEnvironment(gym.Env):
             return np.array(self.state), -100, False, {}  # large negative reward for invalid move
 
         #Elevation cost (going down is good, going up is bad)
-        elevation_cost = self.elevation[self.old_state[0], self.old_state[1]] - self.elevation[self.state[0], self.state[1]]
+        elevation_cost = self.cost(self.old_state, self.state)
         
         done = self.state == self.goal1_position
-        reward = -1 + elevation_cost
+        reward = -1 - elevation_cost
         if done:
             reward = 1000000000
         """TODO: Add rewards and extra conditions"""
         return np.array(self.state), reward, done, {}
+    
+    def neighbors(self, node):
+        neighbors = []
+        x, y = node
+        if x > 0: neighbors.append((x-1, y))  # left
+        if x < len(self.X)-1: neighbors.append((x+1, y))  # right
+        if y > 0: neighbors.append((x, y-1))  # down
+        if y < len(self.Y)-1: neighbors.append((x, y+1))  # up
+        return neighbors
     
     def reset(self):
         self.state = self.initial_position
