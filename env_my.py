@@ -43,15 +43,15 @@ class MoonEnvironment(gym.Env):
             pass
         
         if self.state == self.old_state:
-            return np.array(self.state), -100, False, {}  # large negative reward for invalid move
+            return np.array(self.state), 0, False, {}  # large negative reward for invalid move
 
         #Elevation cost
         elevation_cost = self.cost(self.old_state, self.state)
         
         done = self.state == self.goal1_position
-        reward = -1 - elevation_cost
+        reward = -1 #- elevation_cost/100000
         if done:
-            reward = 1000000000
+            reward = 1000000000000
         """TODO: Add rewards and extra conditions"""
         return np.array(self.state), reward, done, {}
     
@@ -82,10 +82,10 @@ class MoonEnvironment(gym.Env):
         plt.show()
 
 # ----------------- A* ALGORITHM ----------------------------
-    def heuristic(env, from_a, to_b):
+    def heuristic(self, from_a, to_b):
         return abs(from_a[0] - to_b[0]) + abs(from_a[1] - to_b[1])
 
-    def astar(env, start, goal):
+    def astar(self, start, goal):
         frontier = [] #Priotity queue storing nodes to be explored
         heapq.heappush(frontier, (0, start))
         came_from = {}
@@ -97,19 +97,23 @@ class MoonEnvironment(gym.Env):
             if current == goal:
                 break
 
-            for next in env.neighbors(current):
-                new_cost = cost_so_far[tuple(current)] + env.cost(current, next)
-                if next not in cost_so_far or new_cost < cost_so_far[next]:
-                    cost_so_far[next] = new_cost
-                    priority = new_cost + env.heuristic(goal, next)
+            for next in self.neighbors(current):
+                new_cost = cost_so_far[tuple(current)] + self.cost(current, next)
+                next_tuple = tuple(next)
+                if next_tuple not in cost_so_far or new_cost < cost_so_far[next_tuple]:
+                    cost_so_far[next_tuple] = new_cost
+                    priority = new_cost + self.heuristic(goal, next)
                     heapq.heappush(frontier, (priority, next))
-                    came_from[next] = current
+                    came_from[next_tuple] = tuple(current)
 
         # Reconstruct the path
-            path = []
-            while current is not None:
-                path.append(current)
-                current = came_from[current]
-            path.reverse()  # Reverse the path to start-to-goal order
+        path = []
+        while current != tuple(start):
+            path.append(current)
+            current = came_from[current]
+        path.append(tuple(start))  # Add the start node to the path
+        path.reverse()  # Reverse the path to start-to-goal order
 
-            return path, cost_so_far[goal]  # Return the path and its cost
+
+        return path, cost_so_far[tuple(goal)]  # Return the path and its cost
+    
