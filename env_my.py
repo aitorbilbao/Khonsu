@@ -30,6 +30,7 @@ class MoonEnvironment(gym.Env):
         return abs(self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])
     
     def step(self, action):
+        done = False
         self.old_state = self.state
         if action == 0 and self.state[1] < len(self.Y)-1:  # up
             self.state[1] += 1
@@ -45,7 +46,7 @@ class MoonEnvironment(gym.Env):
         elevation_cost = self.cost(self.old_state, self.state)
 
         if self.state == self.old_state:
-            return np.array(self.state), -100, False, {}  # large negative reward for invalid move
+            return np.array(self.state), -100, done, {}  # large negative reward for invalid move
         elif self.state == self.goal1_position:
             done = True
         else:
@@ -106,6 +107,7 @@ class MoonEnvironment(gym.Env):
                     heapq.heappush(frontier, (priority, next))
                     came_from[next_tuple] = tuple(current)
 
+        
         # Reconstruct the path
         path = []
         while current != tuple(start):
