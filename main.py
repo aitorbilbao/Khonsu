@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from import_map import import_map_mesh, plot_grid
 from env_my import MoonEnvironment
 
-
 # Download the STL file and load it into a mesh
 aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
 # jan = 
@@ -20,3 +19,5 @@ env = MoonEnvironment(X, Y, elevation)
 start = env.initial_position
 goal = env.goal1_position
 
+path, cost = env.astar(start, goal)
+env.render(path)
