@@ -19,5 +19,5 @@ env = MoonEnvironment(X, Y, elevation)
 start = env.initial_position
 goal = env.goal1_position
 
-path, cost = env.astar(start, goal)
-env.render(path)
+path, cost, came_from = env.astar(start, goal)
+env.render(path,came_from)

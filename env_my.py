@@ -26,7 +26,7 @@ class MoonEnvironment(gym.Env):
         self.action_space = gym.spaces.Discrete(5)
         self.observation_space = gym.spaces.Tuple((gym.spaces.Discrete(len(self.X)), gym.spaces.Discrete(len(self.Y))))
 
-    def cost(self, from_a, to_b):
+    def elevation_cost(self, from_a, to_b):
         return abs(self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])
     
     def step(self, action):
@@ -43,14 +43,14 @@ class MoonEnvironment(gym.Env):
         elif action == 4:  # stay still
             pass
         #Elevation cost
-        elevation_cost = self.cost(self.old_state, self.state)
+        elevation_cost = self.elevation_cost(self.old_state, self.state)
 
         if self.state == self.old_state:
             return np.array(self.state), -100, done, {}  # large negative reward for invalid move
         elif self.state == self.goal1_position:
             done = True
         else:
-            reward = -1 - elevation_cost
+            reward = -1 - elevation_cost/10
         if done:
             reward = 1000000000000000
         """TODO: Add rewards and extra conditions"""
@@ -69,16 +69,13 @@ class MoonEnvironment(gym.Env):
         self.state = self.initial_position
         return np.array(self.state)
     
-    def render(self, path = None):
+    def render(self, path = None,came_from = None):
         plt.imshow(self.elevation, cmap='terrain', origin='lower')
         plt.scatter(*self.state, color='red')
         plt.scatter(*self.goal1_position, color='green')
         plt.pause(0.001)  # pause a bit so that plots are updated
 
-        # If a path is provided, plot it on top of the environment
-        if path is not None:
-            path_x, path_y = zip(*path)
-            plt.plot(path_x, path_y, 'r-')
+        self.plot(path, came_from)
 
         plt.show()
 
@@ -87,35 +84,58 @@ class MoonEnvironment(gym.Env):
         return abs(from_a[0] - to_b[0]) + abs(from_a[1] - to_b[1])
 
     def astar(self, start, goal):
-        frontier = [] #Priotity queue storing nodes to be explored
+        frontier = [] #Priority queue storing nodes to be explored
         heapq.heappush(frontier, (0, start))
         came_from = {}
         cost_so_far = {tuple(start): 0}
-
+        goal_reached = False  # Add a flag to track if the goal is reached
+        all_nodes = set()  # Keep track of all nodes visited
+    
         while frontier:
             current = heapq.heappop(frontier)[1]
-
-            if current == goal:
+            print(f"Current node: {current}, Cost so far: {cost_so_far[tuple(current)]}")
+            all_nodes.add(tuple(current))  # Add current node to all_nodes
+    
+            # Don't break when the goal is found, but update the flag and continue exploring
+            if current == tuple(goal) and not goal_reached:
+                goal_reached = True
+                print("Goal reached!")
                 break
-
+    
             for next in self.neighbors(current):
-                new_cost = cost_so_far[tuple(current)] + self.cost(current, next)
+                new_cost = cost_so_far[tuple(current)] + self.elevation_cost(current, next)
+                if next == tuple(goal):
+                    new_cost -= 1000
+                print(f"Neighbor: {next}, New cost: {new_cost}")
                 next_tuple = tuple(next)
                 if next_tuple not in cost_so_far or new_cost < cost_so_far[next_tuple]:
                     cost_so_far[next_tuple] = new_cost
                     priority = new_cost + self.heuristic(goal, next)
                     heapq.heappush(frontier, (priority, next))
                     came_from[next_tuple] = tuple(current)
-
-        
+                    print(f"Adding node to frontier: {next}, Priority: {priority}")
+    
+        # If the goal was not reached, return None or an appropriate value
+        if not goal_reached:
+            print("Goal not reachable!")
+            return None, None, None
+    
         # Reconstruct the path
         path = []
+        current = tuple(goal)  # Start from the goal
         while current != tuple(start):
             path.append(current)
             current = came_from[current]
         path.append(tuple(start))  # Add the start node to the path
         path.reverse()  # Reverse the path to start-to-goal order
-
-
-        return path, cost_so_far[tuple(goal)]  # Return the path and its cost
+    
+        return path, cost_so_far[tuple(goal)], came_from  # Return the path, its cost, and all nodes visited
+    
+    # In your plotting function, use the returned all_nodes to plot all paths and path to plot the best path
+    def plot(self, path=None, came_from=None):
+        if path is not None:
+            path_x, path_y = zip(*path)
+            plt.plot(path_x, path_y, 'r-')  # Plot the best path in red
+    
+        plt.show()
     
