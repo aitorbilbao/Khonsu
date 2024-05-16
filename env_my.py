@@ -95,31 +95,31 @@ class MoonEnvironment(gym.Env):
     
         while frontier:
             current = heapq.heappop(frontier)[1]
-            print(f"Current node: {current}, Cost so far: {cost_so_far[tuple(current)]}")
+            #print(f"Current node: {current}, Cost so far: {cost_so_far[tuple(current)]}")
             all_nodes.add(tuple(current))  # Add current node to all_nodes
     
             if current == tuple(goal) and not goal_reached:
                 goal_reached = True
-                print("Goal reached!")
+                #print("Goal reached!")
                 break
     
             for next in self.neighbors(current):
                 new_cost = cost_so_far[tuple(current)] + self.elevation_cost(current, next)
                 if next == tuple(goal):
                     new_cost -= 1000
-                print(f"Neighbor: {next}, New cost: {new_cost}")
+                #print(f"Neighbor: {next}, New cost: {new_cost}")
                 next_tuple = tuple(next)
                 if next_tuple not in cost_so_far or new_cost < cost_so_far[next_tuple]:
                     cost_so_far[next_tuple] = new_cost
                     priority = new_cost + self.heuristic(goal, next)
                     heapq.heappush(frontier, (priority, next))
                     came_from[next_tuple] = tuple(current)
-                    print(f"Adding node to frontier: {next}, Priority: {priority}")
+                    #print(f"Adding node to frontier: {next}, Priority: {priority}")
             
             #self.live_render(None, came_from)
 
         if not goal_reached:
-            print("Goal not reachable!")
+            #print("Goal not reachable!")
             return None, None, None
     
         # Reconstruct the path
