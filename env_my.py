@@ -41,17 +41,17 @@ class MoonEnvironment(gym.Env):
             self.state[0] += 1
         elif action == 4:  # stay still
             pass
-        
-        if self.state == self.old_state:
-            return np.array(self.state), 0, False, {}  # large negative reward for invalid move
-
         #Elevation cost
         elevation_cost = self.cost(self.old_state, self.state)
-        
-        done = self.state == self.goal1_position
-        reward = -1 #- elevation_cost/100000
+
+        if self.state == self.old_state:
+            return np.array(self.state), -100, False, {}  # large negative reward for invalid move
+        elif self.state == self.goal1_position:
+            done = True
+        else:
+            reward = -1 - elevation_cost
         if done:
-            reward = 1000000000000
+            reward = 1000000000000000
         """TODO: Add rewards and extra conditions"""
         return np.array(self.state), reward, done, {}
     
