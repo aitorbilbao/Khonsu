@@ -7,7 +7,7 @@ import pygame
 import heapq
 
 class MoonEnvironment(gym.Env):
-    def __init__(self, X, Y, elevation): #add arguments
+    def __init__(self, X, Y, elevation): #add more arguments later maybe
         super().__init__()
 
         self.X = X
@@ -19,7 +19,7 @@ class MoonEnvironment(gym.Env):
         """"
         TODO: We have to change the goal position to the big crater, and add the rest
         """
-        self.goal1_position = [4*len(self.X)//6, 4*len(self.Y)//6]
+        self.goal1_position = [22*len(self.X)//30, 18*len(self.Y)//30]
         self.state = self.initial_position
         
         # Possible actions: 5
@@ -70,16 +70,18 @@ class MoonEnvironment(gym.Env):
         return np.array(self.state)
     
     def render(self, path = None,came_from = None):
-        plt.imshow(self.elevation, cmap='terrain', origin='lower')
+        plt.imshow(self.elevation, cmap='Spectral', origin='lower')
         plt.scatter(*self.state, color='red')
         plt.scatter(*self.goal1_position, color='green')
         plt.pause(0.001)  # pause a bit so that plots are updated
 
-        self.plot(path, came_from)
-
+        if path is not None:
+            path_x, path_y = zip(*path)
+            plt.plot(path_x, path_y, 'r-')  # Plot the best path in red
         plt.show()
 
 # ----------------- A* ALGORITHM ----------------------------
+
     def heuristic(self, from_a, to_b):
         return abs(from_a[0] - to_b[0]) + abs(from_a[1] - to_b[1])
 
@@ -88,7 +90,7 @@ class MoonEnvironment(gym.Env):
         heapq.heappush(frontier, (0, start))
         came_from = {}
         cost_so_far = {tuple(start): 0}
-        goal_reached = False  # Add a flag to track if the goal is reached
+        goal_reached = False  
         all_nodes = set()  # Keep track of all nodes visited
     
         while frontier:
@@ -96,7 +98,6 @@ class MoonEnvironment(gym.Env):
             print(f"Current node: {current}, Cost so far: {cost_so_far[tuple(current)]}")
             all_nodes.add(tuple(current))  # Add current node to all_nodes
     
-            # Don't break when the goal is found, but update the flag and continue exploring
             if current == tuple(goal) and not goal_reached:
                 goal_reached = True
                 print("Goal reached!")
@@ -114,8 +115,9 @@ class MoonEnvironment(gym.Env):
                     heapq.heappush(frontier, (priority, next))
                     came_from[next_tuple] = tuple(current)
                     print(f"Adding node to frontier: {next}, Priority: {priority}")
-    
-        # If the goal was not reached, return None or an appropriate value
+            
+            #self.live_render(None, came_from)
+
         if not goal_reached:
             print("Goal not reachable!")
             return None, None, None
@@ -127,15 +129,23 @@ class MoonEnvironment(gym.Env):
             path.append(current)
             current = came_from[current]
         path.append(tuple(start))  # Add the start node to the path
-        path.reverse()  # Reverse the path to start-to-goal order
+        path.reverse()  
     
-        return path, cost_so_far[tuple(goal)], came_from  # Return the path, its cost, and all nodes visited
+        return path, cost_so_far[tuple(goal)], came_from 
     
-    # In your plotting function, use the returned all_nodes to plot all paths and path to plot the best path
-    def plot(self, path=None, came_from=None):
+    def live_render(self, path=None, came_from=None):
+        plt.imshow(self.elevation, cmap='Spectral', origin='lower')
+        plt.scatter(*self.state, color='red')
+        plt.scatter(*self.goal1_position, color='green')
+        plt.clf()
+        if came_from is not None:
+            for node, parent in came_from.items():
+                plt.plot([node[0], parent[0]], [node[1], parent[1]], color = 'gray')
+
         if path is not None:
             path_x, path_y = zip(*path)
             plt.plot(path_x, path_y, 'r-')  # Plot the best path in red
-    
-        plt.show()
+        
+        plt.draw()
+        plt.pause(0.01)
     
