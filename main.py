@@ -1,14 +1,19 @@
 from stl import mesh
-from import_map import import_map_mesh, plot_grid
-from env_my import MoonEnvironment
+import zipfile
+from ImportMesh import import_map_mesh, plot_grid
+from Environment import MoonEnvironment
+import os
 
-# Download the STL file and load it into a mesh
-aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
-# jan = 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+zip_path = os.path.join(current_dir, "map.zip")
+
+with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    zip_ref.extract('map.stl', current_dir)
+
 
 #Change file path (mesh is 297x297 km)
-M = mesh.Mesh.from_file(aitor)
-grid_size = 20000
+M = mesh.Mesh.from_file(current_dir + '/map.stl')
+grid_size = 30000
 X,Y,elevation = import_map_mesh(M,grid_size)
 
 # ------------- A STAR ALGORITHM ----------------------------
