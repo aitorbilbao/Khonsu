@@ -32,7 +32,7 @@ class MoonEnvironment(gym.Env):
         return abs(self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])
     
     def slope(self, from_a, to_b, ):
-        distance = 297000/self.grid_size
+        distance = self.grid_size
         return math.degrees(math.atan((self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])/distance))
     
     def step(self, action):
