@@ -1,10 +1,8 @@
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-import keyboard
-import pygame
 import heapq
+from PriorityQueue import PriorityQueue
 
 class MoonEnvironment(gym.Env):
     def __init__(self, X, Y, elevation): #add more arguments later maybe
@@ -50,11 +48,14 @@ class MoonEnvironment(gym.Env):
         elif self.state == self.goal1_position:
             done = True
         else:
-            reward = -1 - elevation_cost/10
+            reward = -1 - elevation_cost
         if done:
-            reward = 1000000000000000
+            reward = self.goal_reached_score()
         """TODO: Add rewards and extra conditions"""
         return np.array(self.state), reward, done, {}
+
+    def goal_reached_score(self):
+        return 1000000000000000
     
     def neighbors(self, node):
         neighbors = []
@@ -86,35 +87,36 @@ class MoonEnvironment(gym.Env):
         return abs(from_a[0] - to_b[0]) + abs(from_a[1] - to_b[1])
 
     def astar(self, start, goal):
-        frontier = [] #Priority queue storing nodes to be explored
-        heapq.heappush(frontier, (0, start))
+        start = tuple(start)
+        goal = tuple(goal)
+        frontier = PriorityQueue()
+        frontier.put(start, 0)
         came_from = {}
-        cost_so_far = {tuple(start): 0}
+        cost_so_far = {start: 0}
         goal_reached = False  
-        all_nodes = set()  # Keep track of all nodes visited
+        all_nodes = set()  # keep track of all nodes visited
     
-        while frontier:
-            current = heapq.heappop(frontier)[1]
-            #print(f"Current node: {current}, Cost so far: {cost_so_far[tuple(current)]}")
+        while not frontier.empty():
+            current = frontier.get()
             all_nodes.add(tuple(current))  # Add current node to all_nodes
     
-            if current == tuple(goal) and not goal_reached:
+            if current == goal and not goal_reached:
                 goal_reached = True
-                #print("Goal reached!")
                 break
     
             for next in self.neighbors(current):
-                new_cost = cost_so_far[tuple(current)] + self.elevation_cost(current, next)
-                if next == tuple(goal):
-                    new_cost -= 1000
-                #print(f"Neighbor: {next}, New cost: {new_cost}")
-                next_tuple = tuple(next)
-                if next_tuple not in cost_so_far or new_cost < cost_so_far[next_tuple]:
-                    cost_so_far[next_tuple] = new_cost
+                next = tuple(next)
+                current = tuple(current)
+                if next in all_nodes:
+                    continue
+                new_cost = cost_so_far[current] + self.elevation_cost(current, next)
+                if next == goal:
+                    new_cost -= self.goal_reached_score()
+                if next not in cost_so_far or new_cost < cost_so_far[next]:
+                    cost_so_far[next] = new_cost
                     priority = new_cost + self.heuristic(goal, next)
-                    heapq.heappush(frontier, (priority, next))
-                    came_from[next_tuple] = tuple(current)
-                    #print(f"Adding node to frontier: {next}, Priority: {priority}")
+                    frontier.put(next,priority)
+                    came_from[next] = current
             
             #self.live_render(None, came_from)
 
@@ -124,14 +126,14 @@ class MoonEnvironment(gym.Env):
     
         # Reconstruct the path
         path = []
-        current = tuple(goal)  # Start from the goal
-        while current != tuple(start):
+        current = goal  # Start from the goal
+        while current != start:
             path.append(current)
             current = came_from[current]
-        path.append(tuple(start))  # Add the start node to the path
+        path.append(start)  # Add the start node to the path
         path.reverse()  
     
-        return path, cost_so_far[tuple(goal)], came_from 
+        return path, cost_so_far[goal], came_from 
     
     def live_render(self, path=None, came_from=None):
         plt.imshow(self.elevation, cmap='Spectral', origin='lower')

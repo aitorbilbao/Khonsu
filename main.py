@@ -1,5 +1,4 @@
 from stl import mesh
-import matplotlib.pyplot as plt
 from import_map import import_map_mesh, plot_grid
 from env_my import MoonEnvironment
 
@@ -9,7 +8,7 @@ aitor = "C://Users//aitor//Desktop//Path AI//map.stl"
 
 #Change file path (mesh is 297x297 km)
 M = mesh.Mesh.from_file(aitor)
-grid_size = 3000
+grid_size = 20000
 X,Y,elevation = import_map_mesh(M,grid_size)
 
 # ------------- A STAR ALGORITHM ----------------------------
