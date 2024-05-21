@@ -1,31 +1,39 @@
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-import heapq
+import math
 from PriorityQueue import PriorityQueue
 
 class MoonEnvironment(gym.Env):
-    def __init__(self, X, Y, elevation): #add more arguments later maybe
+    def __init__(self, X, Y, elevation,grid_size,max_slope): #add more arguments later maybe
         super().__init__()
 
         self.X = X
         self.Y = Y
         self.elevation = elevation
+        self.grid_size = grid_size
+        self.max_slope = max_slope
 
         #Initial position = base, Goal1 = Big crater. It works with indices.
-        self.initial_position = [len(self.X)//2, len(self.Y)//2]
+        self.initial_position = tuple([len(self.X)//2, len(self.Y)//2])
         """"
         TODO: We have to change the goal position to the big crater, and add the rest
         """
-        self.goal1_position = [22*len(self.X)//30, 18*len(self.Y)//30]
+        self.goal1_position = tuple([22*len(self.X)//30, 18*len(self.Y)//30])
         self.state = self.initial_position
         
+        self.NEIGHBOR_OFFSETS = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # left, right, down, up
+
         # Possible actions: 5
         self.action_space = gym.spaces.Discrete(5)
         self.observation_space = gym.spaces.Tuple((gym.spaces.Discrete(len(self.X)), gym.spaces.Discrete(len(self.Y))))
 
     def elevation_cost(self, from_a, to_b):
         return abs(self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])
+    
+    def slope(self, from_a, to_b, ):
+        distance = 297000/self.grid_size
+        return math.atan((self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])/distance)
     
     def step(self, action):
         done = False
@@ -44,7 +52,7 @@ class MoonEnvironment(gym.Env):
         elevation_cost = self.elevation_cost(self.old_state, self.state)
 
         if self.state == self.old_state:
-            return np.array(self.state), -100, done, {}  # large negative reward for invalid move
+            return self.state, -100, done, {}  # large negative reward for invalid move
         elif self.state == self.goal1_position:
             done = True
         else:
@@ -52,23 +60,21 @@ class MoonEnvironment(gym.Env):
         if done:
             reward = self.goal_reached_score()
         """TODO: Add rewards and extra conditions"""
-        return np.array(self.state), reward, done, {}
+        return self.state, reward, done, {}
 
     def goal_reached_score(self):
         return 1000000000000000
     
     def neighbors(self, node):
-        neighbors = []
         x, y = node
-        if x > 0: neighbors.append((x-1, y))  # left
-        if x < len(self.X)-1: neighbors.append((x+1, y))  # right
-        if y > 0: neighbors.append((x, y-1))  # down
-        if y < len(self.Y)-1: neighbors.append((x, y+1))  # up
+        max_x, max_y = len(self.X) - 1, len(self.Y) - 1
+        neighbors = [(x + dx, y + dy) for dx, dy in self.NEIGHBOR_OFFSETS
+                     if 0 <= x + dx <= max_x and 0 <= y + dy <= max_y]
         return neighbors
     
     def reset(self):
         self.state = self.initial_position
-        return np.array(self.state)
+        return self.state
     
     def render(self, path = None,came_from = None):
         plt.imshow(self.elevation, cmap='Spectral', origin='lower')
