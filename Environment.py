@@ -20,8 +20,8 @@ class MoonEnvironment(gym.Env):
         TODO: We have to change the goal position to the big crater, and add the rest
         """
         self.goal1_position = tuple([22*len(self.X)//30, 18*len(self.Y)//30])
-        self.state = self.initial_position
-        
+        self.state = self.initial_position        
+
         self.NEIGHBOR_OFFSETS = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # left, right, down, up
 
         # Possible actions: 5
@@ -33,7 +33,7 @@ class MoonEnvironment(gym.Env):
     
     def slope(self, from_a, to_b, ):
         distance = 297000/self.grid_size
-        return math.atan((self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])/distance)
+        return math.degrees(math.atan((self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])/distance))
     
     def step(self, action):
         done = False
@@ -70,6 +70,7 @@ class MoonEnvironment(gym.Env):
         max_x, max_y = len(self.X) - 1, len(self.Y) - 1
         neighbors = [(x + dx, y + dy) for dx, dy in self.NEIGHBOR_OFFSETS
                      if 0 <= x + dx <= max_x and 0 <= y + dy <= max_y]
+        neighbors = [n for n in neighbors if self.slope(node,n) <= float(self.max_slope)]
         return neighbors
     
     def reset(self):
