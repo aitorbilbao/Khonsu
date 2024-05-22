@@ -5,7 +5,8 @@ from RoverSpecs import RoverSpecifications
 # ----------------- ROVER SPECS ---------------------------
 
 Rover = RoverSpecifications()
-max_slope = Rover.max_slope
+#max_slope = Rover.max_slope
+max_slope = 50
 
 # ----------------- Environment ---------------------------
 
