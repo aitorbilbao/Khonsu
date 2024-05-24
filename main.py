@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #from Mesh.ImportMesh import X,Y,elevation,grid_size
+=======
+from ImportMesh import X,Y,elevation,grid_size
+>>>>>>> 6212916d9e2b47ed67369a0cd2868881cb1582c0
 from Environment import MoonEnvironment
 from Agent.RoverSpecs import RoverSpecifications
 
