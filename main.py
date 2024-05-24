@@ -17,5 +17,5 @@ goal = env.goal1_position
 
 # --------------- A STAR ALGORITHM -------------------------
 
-path, cost, came_from = env.astar(start, goal)
-env.render(path,came_from)
+#path, cost, came_from = env.astar(start, goal)
+#env.render(path,came_from)

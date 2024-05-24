@@ -5,10 +5,10 @@ import pickle
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-zip_path = os.path.join(current_dir, "map.zip")
+#zip_path = os.path.join(current_dir, "map.zip")
 
-with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-    zip_ref.extract('map.stl', current_dir)
+#with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+#    zip_ref.extract('map.stl', current_dir)
 
 
 #Change file path (mesh is 297x297 km)

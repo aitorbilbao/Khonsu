@@ -26,6 +26,30 @@ def import_map_mesh(M,new_grid_size):
             X.append(vertex[0])
             Y.append(vertex[1])
             Z.append(vertex[2])
+    
+    #here
+    # print([i for i in X if i])
+    # print(numpy.min([i for i in X if i]))
+    dx = numpy.min([i for i in X if i])
+    dy = numpy.min([i for i in Y if i])
+    new_X = [int(i) for i in X/dx]
+    new_Y = [int(i) for i in Y/dx]
+    test_grid = numpy.zeros((numpy.max(new_X)+1,numpy.max(new_Y)+1))
+    print(numpy.array(Z).shape)
+    Z_compelete = numpy.vstack((numpy.array(new_X),numpy.array(new_Y),numpy.array(Z))).T
+    for i in Z_compelete:
+        test_grid[int(i[0])][int(i[1])] = i[-1]
+        if int(i[1])==452:
+            print(test_grid[int(i[0])][int(i[1])])
+    
+    # Plot the test grid
+    pyplot.imshow(test_grid, cmap='magma')
+    pyplot.colorbar()
+    pyplot.show()
+
+
+
+
 
     # Generate the new grid points
     x_min, x_max = min(X), max(X)
