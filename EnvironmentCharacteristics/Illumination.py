@@ -5,7 +5,7 @@ from ImportMesh import M
 import matplotlib.pyplot as plt
 '''
 
-im = iio.imread('..//Media//Illumination.png')
+im = iio.imread('.//Media//Illumination.png')
 av = np.average(im, axis=2)
 av = av/256
 

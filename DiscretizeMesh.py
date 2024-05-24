@@ -9,17 +9,6 @@ def import_map_mesh(M,new_grid_size):
     Y = []
     Z = []
 
-    '''
-    # Plot the 3D mesh
-    axes.add_collection3d(mplot3d.art3d.Poly3DCollection(M.vectors))
-
-    # Auto scale to the mesh size
-    scale = M.points.flatten()
-    axes.auto_scale_xyz(scale, scale, scale)
-
-    # Show the plot to the screen
-    pyplot.show()
-    '''
     # Extract the coordinates from the mesh
     for vector in M.vectors:
         for vertex in vector:

@@ -10,7 +10,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 #with zipfile.ZipFile(zip_path, 'r') as zip_ref:
 #    zip_ref.extract('map.stl', current_dir)
 
-
 #Change file path (mesh is 297x297 km)
 M = mesh.Mesh.from_file(current_dir + '/map.stl')
 pickle_file = os.path.join(current_dir, 'discretized_data.pkl')
