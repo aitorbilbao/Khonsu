@@ -1,5 +1,7 @@
 import pickle
 from matplotlib import pyplot
+import imageio.v3 as iio
+
 
 # ------- Import Discretized Data and Test Grid -------
 
@@ -18,3 +20,5 @@ def plot_grid(X, Y, elevation):
     axes.plot_surface(X, Y, elevation, cmap='Spectral')
     pyplot.show()
 
+def illumination():
+     return 'hello'
