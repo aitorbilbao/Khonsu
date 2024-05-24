@@ -1,4 +1,5 @@
 import pygame
+from MapVisualize import elevation_map, plot_grid
 
 # Initialize Pygame
 pygame.init()
@@ -31,6 +32,13 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            # Check if button 1 is clicked
+            if pygame.Rect(button1_x, button1_y, button_width, button_height).collidepoint(event.pos):
+                elevation_map()  # Call the elevation_map function from MapVisualize
+            # Check if button 2 is clicked
+            elif pygame.Rect(button2_x, button2_y, button_width, button_height).collidepoint(event.pos):
+                plot_grid()  # Call the plot_grid function from MapVisualize
 
     # Clear the screen
     screen.fill(WHITE)
