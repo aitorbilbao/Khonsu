@@ -1,6 +1,5 @@
 import imageio.v3 as iio
 import numpy as np
-from ImportMesh import M
 import matplotlib.pyplot as plt
 
 im = iio.imread('.//Media//Illumination.png')

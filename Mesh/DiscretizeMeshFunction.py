@@ -1,6 +1,4 @@
 import numpy
-#from stl import mesh
-from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 
 def import_map_mesh(M,new_grid_size):
@@ -24,20 +22,12 @@ def import_map_mesh(M,new_grid_size):
     new_X = [int(i) for i in X/dx]
     new_Y = [int(i) for i in Y/dx]
     test_grid = numpy.zeros((numpy.max(new_X)+1,numpy.max(new_Y)+1))
-    print(numpy.array(Z).shape)
+#    print(numpy.array(Z).shape)
     Z_compelete = numpy.vstack((numpy.array(new_X),numpy.array(new_Y),numpy.array(Z))).T
     for i in Z_compelete:
         test_grid[int(i[0])][int(i[1])] = i[-1]
-        if int(i[1])==452:
-            print(test_grid[int(i[0])][int(i[1])])
-    
-    # Plot the test grid
-    pyplot.imshow(test_grid, cmap='magma')
-    pyplot.colorbar()
-    pyplot.show()
-
-
-
+#        if int(i[1])==452:
+#            print(test_grid[int(i[0])][int(i[1])])
 
 
     # Generate the new grid points
@@ -49,7 +39,7 @@ def import_map_mesh(M,new_grid_size):
 
     #Get average heights
     new_elevation = average_value(X, Y, Z, new_x_grid, new_y_grid, new_xx, new_yy)
-    return new_xx, new_yy, new_elevation
+    return new_xx, new_yy, new_elevation, test_grid
 
 def average_value(X, Y, Z, new_x_grid, new_y_grid, new_xx, new_yy):
     # Calculate the average height for each new grid region
@@ -72,15 +62,3 @@ def average_value(X, Y, Z, new_x_grid, new_y_grid, new_xx, new_yy):
         new_z_grid[-1, -1] = numpy.mean(numpy.array(Z)[region_mask])
 
     return new_z_grid
-
-def plot_grid(new_xx, new_yy, new_z_grid):
-    # Create a new plot for 3D grid visualization
-    figure = pyplot.figure()
-    axes = figure.add_subplot(projection='3d')
-
-
-    # Plot the new grid
-    axes.plot_surface(new_xx, new_yy, new_z_grid, cmap='Spectral')
-
-    # Show the plot to the screen
-    pyplot.show()
