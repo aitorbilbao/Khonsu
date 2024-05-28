@@ -34,6 +34,13 @@ def import_map_mesh(M,new_grid_size):
             if test_grid[i][j] == 0:
                 test_grid[i][j] =(test_grid[i][j+1]+test_grid[i][j-1])/2
 
+    new_x_grid, new_y_grid, new_xx, new_yy = new_grid(X,Y,new_grid_size)
+    #Get average heights
+    new_elevation = average_value(X, Y, Z, new_x_grid, new_y_grid, new_xx, new_yy)
+    return new_xx, new_yy, new_elevation, test_grid
+
+
+def new_grid(X,Y,new_grid_size):
     # Generate the new grid points
     x_min, x_max = min(X), max(X)
     y_min, y_max = min(Y), max(Y)
@@ -41,11 +48,8 @@ def import_map_mesh(M,new_grid_size):
     new_y_grid = numpy.arange(y_min, y_max, new_grid_size)
     new_xx, new_yy = numpy.meshgrid(new_x_grid, new_y_grid)
 
-    #Get average heights
-    new_elevation = average_value(X, Y, Z, new_x_grid, new_y_grid, new_xx, new_yy)
-    return new_xx, new_yy, new_elevation, test_grid
+    return new_x_grid, new_y_grid, new_xx, new_yy
 
-    
     
 
 

@@ -2,10 +2,16 @@ import gym
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from Environment_1.PriorityQueue import PriorityQueue_class as PriorityQueue
+from PriorityQueue import PriorityQueue_class as PriorityQueue
+from PIL import Image
+
+
+file_path = 'C:/Users/aitor/Documents/GitHub/Project-Khonsu/EnvironmentCharacteristics/Illumination.png'
+
+illumination_array = np.array(Image.open(file_path))
 
 class MoonEnvironment(gym.Env):
-    def __init__(self, X, Y, elevation,grid_size,max_slope): #add more arguments later maybe
+    def __init__(self, X, Y, elevation,grid_size,max_slope,illumination_requirements): #add more arguments later maybe
         super().__init__()
 
         self.X = X
@@ -27,6 +33,8 @@ class MoonEnvironment(gym.Env):
         # Possible actions: 5
         self.action_space = gym.spaces.Discrete(5)
         self.observation_space = gym.spaces.Tuple((gym.spaces.Discrete(len(self.X)), gym.spaces.Discrete(len(self.Y))))
+
+    def illumiation_cost(self, from_a, to_b):
 
     def elevation_cost(self, from_a, to_b):
         return abs(self.elevation[from_a[0], from_a[1]] - self.elevation[to_b[0], to_b[1]])
