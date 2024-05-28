@@ -43,10 +43,13 @@ for image in Image_list:
 
 fig, ax = plt.subplots(2,5)
 #------- Increase contrast ---------
-for image in Image_edge_list:
-    p1,p99 = np.percentile(image, (1,99))
-    image = np.clip((image - p1) / (p99 - p1), 0 ,1)
-    plt.imshow(image,cmap='magma',alpha = 0.6)
+for index, image in enumerate(Image_edge_list):
+    p1, p99 = np.percentile(image, (1, 99))
+    image = np.clip((image - p1) / (p99 - p1), 0, 1)
+    if index < 5:
+        ax[0][index].imshow(image, cmap='magma', alpha=0.6)
+    if index >= 5:
+        ax[1][index-5].imshow(image, cmap='gray', alpha=0.6)
 
 
 # ----- Import saved discretised data -----
@@ -55,9 +58,8 @@ file = ".//Mesh//discretized_data.pkl"
 with open(file, 'rb') as f:
         X, Y, elevation, test_grid = pickle.load(f)
 
-test_grid_flipped = np.flipud(test_grid)
 
-imp = ndimage.laplace(test_grid_flipped)
+imp = ndimage.laplace(test_grid)
 p1_,p99_ = np.percentile(imp, (1, 99))
 stretched_imp = np.clip((imp - p1_) / (p99_ - p1_), 0, 1)
 
