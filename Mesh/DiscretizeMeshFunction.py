@@ -1,5 +1,4 @@
 import numpy
-from matplotlib import pyplot
 
 def import_map_mesh(M,new_grid_size):
 

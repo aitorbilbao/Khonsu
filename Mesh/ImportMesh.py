@@ -1,5 +1,5 @@
 from stl import mesh
-from DiscretizeMeshFunction import import_map_mesh
+from Mesh.DiscretizeMeshFunction import import_map_mesh
 import pickle
 import os
 

@@ -1,6 +1,6 @@
 
-from ImportMesh import X,Y,elevation,grid_size
-from Environment import MoonEnvironment
+from Mesh.ImportMesh import X,Y,elevation,grid_size
+from Environment_1.Environment import MoonEnvironment
 from Agent.RoverSpecs import RoverSpecifications
 
 # ----------------- ROVER SPECS ---------------------------

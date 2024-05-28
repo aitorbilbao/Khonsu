@@ -2,7 +2,7 @@ import gym
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from PriorityQueue import PriorityQueue
+from Environment_1.PriorityQueue import PriorityQueue_class as PriorityQueue
 
 class MoonEnvironment(gym.Env):
     def __init__(self, X, Y, elevation,grid_size,max_slope): #add more arguments later maybe

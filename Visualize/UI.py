@@ -1,5 +1,5 @@
 import pygame, sys
-from MapVisualize import elevation_map, plot_grid, plot_discretized_data
+from Visualize.MapVisualize import elevation_map, plot_grid, plot_discretized_data
 import pickle
 import imageio.v3 as iio
 
