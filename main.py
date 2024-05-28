@@ -1,5 +1,5 @@
 
-#from ImportMesh import X,Y,elevation,grid_size
+from ImportMesh import X,Y,elevation,grid_size
 from Environment import MoonEnvironment
 from Agent.RoverSpecs import RoverSpecifications
 
