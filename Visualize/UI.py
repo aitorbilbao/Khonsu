@@ -1,11 +1,18 @@
 import pygame, sys
-from Visualize.MapVisualize import elevation_map, plot_grid, plot_discretized_data
+from MapVisualize import elevation_map, plot_grid, plot_discretized_data
 import pickle
 import imageio.v3 as iio
+from Environment_1.Environment import MoonEnvironment
 
 file = ".//Mesh//discretized_data.pkl"
 with open(file, 'rb') as f:
-        X, Y, elevation, test_grid = pickle.load(f)
+        X, Y, elevation, test_grid,grid_size = pickle.load(f)
+
+max_slope = 50
+
+env = MoonEnvironment(X, Y, elevation,grid_size,max_slope)
+start = env.initial_position
+goal = env.goal1_position
 
 # Initialize Pygame
 pygame.init()
@@ -26,12 +33,14 @@ button_width = 300
 button_height = 50
 
 # Define button positions
-button1_x = (screen_width - button_width) // 2
+button1_x = (screen_width - button_width) // 2 - 200
 button1_y = (screen_height - button_height) // 2 - 200
-button2_x = (screen_width - button_width) // 2
+button2_x = (screen_width - button_width) // 2 +200
 button2_y = (screen_height - button_height) // 2 + 200
-button3_x = (screen_width - button_width) // 2
-button3_y = (screen_height - button_height) // 2
+button3_x = (screen_width - button_width) // 2 -200
+button3_y = (screen_height - button_height) // 2 + 200
+button4_x = (screen_width - button_width) // 2 +200
+button4_y = (screen_height - button_height) // 2 - 200
 
 
 # Game loop
@@ -50,6 +59,9 @@ while running:
                 plot_grid(X,Y,elevation)  # Call the plot_grid function from MapVisualize
             elif pygame.Rect(button3_x, button3_y, button_width, button_height).collidepoint(event.pos):
                 plot_discretized_data(X,Y,elevation)
+            elif pygame.Rect(button3_x, button3_y, button_width, button_height).collidepoint(event.pos):
+                path, cost, came_from = env.astar(start, goal)
+                env.render(path,came_from)
 
     # Clear the screen
     screen.fill(WHITE)
@@ -159,7 +171,7 @@ class Game:
 			self.ui.show_coins(self.coins)
 			self.hundredcoins()
 
-			
+'''	
 # Pygame setup 
 pygame.init()
 
@@ -214,3 +226,5 @@ while True:
 
 	pygame.display.update()
 	clock.tick(60)
+
+'''
