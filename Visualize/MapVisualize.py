@@ -1,16 +1,14 @@
-import pickle
 from matplotlib import pyplot
-import imageio.v3 as iio
-
 
 # ------- Import Discretized Data and Test Grid -------
 
-file = ".//Mesh//discretized_data.pkl"
-with open(file, 'rb') as f:
-        X, Y, elevation, test_grid = pickle.load(f)
-
 def elevation_map(test_grid):
     pyplot.imshow(test_grid, cmap='magma')
+    pyplot.colorbar()
+    pyplot.show()
+
+def plot_discretized_data(X, Y, elevation):
+    pyplot.imshow(elevation, cmap='Spectral', origin='lower')
     pyplot.colorbar()
     pyplot.show()
 

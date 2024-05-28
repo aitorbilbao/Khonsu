@@ -41,11 +41,12 @@ Image_edge_list = []
 for image in Image_list:
     Image_edge_list. append(ndimage.laplace(image))
 
+fig, ax = plt.subplots(2,5)
 #------- Increase contrast ---------
 for image in Image_edge_list:
     p1,p99 = np.percentile(image, (1,99))
     image = np.clip((image - p1) / (p99 - p1), 0 ,1)
-    #plt.imshow(image,cmap='magma',alpha = 0.6)
+    plt.imshow(image,cmap='magma',alpha = 0.6)
 
 
 # ----- Import saved discretised data -----
