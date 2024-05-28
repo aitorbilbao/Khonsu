@@ -11,3 +11,5 @@ def Illumination():
 
     plt.imshow(scaled_array, cmap='gray')
     plt.savefig('EnvironmentCharacteristics//Illumination.png')
+
+    return scaled_array

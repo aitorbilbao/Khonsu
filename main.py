@@ -1,6 +1,7 @@
 
 from Agent.RoverSpecs import RoverSpecifications
 from EnvironmentCharacteristics.Ilumination import Illumination
+import numpy as np
 
 import pygame, sys
 from Visualize.MapVisualize import elevation_map, plot_grid, plot_discretized_data
@@ -13,17 +14,16 @@ from Environment_1.Environment import MoonEnvironment
 Rover = RoverSpecifications()
 max_slope = Rover.max_slope
 illumination_requirements = Rover.illumination_requirements
-Illumination()
+illumination_array = Illumination()
 #------------------------------------------------------------
-
 
 
 file = ".//Mesh//discretized_data.pkl"
 with open(file, 'rb') as f:
         X, Y, elevation, test_grid,grid_size = pickle.load(f)
 
-
-env = MoonEnvironment(X, Y, elevation,grid_size,max_slope,illumination_requirements)
+print(elevation)
+env = MoonEnvironment(X, Y, elevation,grid_size,max_slope,illumination_requirements,illumination_array)
 start = env.initial_position
 goal = env.goal1_position
 
