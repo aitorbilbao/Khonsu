@@ -9,6 +9,11 @@ import pickle
 import imageio.v3 as iio
 from Environment_1.Environment import MoonEnvironment
 
+
+#from EnvironmentCharacteristics.FeO_Jing import Jing
+#Jing()
+
+
 # ----------------- ROVER SPECS ---------------------------
 
 Rover = RoverSpecifications()
